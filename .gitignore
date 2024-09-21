@@ -27,3 +27,9 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Ignore IntelliJ IDEA project files
+.idea/
+
+# Ignore build output directories
+target/
