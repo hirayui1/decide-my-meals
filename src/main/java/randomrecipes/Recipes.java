@@ -15,6 +15,10 @@ public class Recipes {
         return recipes;
     }
 
+    public void addRecipes(String recipeName, List<String> ingredients) {
+        recipes.put(recipeName, ingredients);
+    }
+
     public void printAll() {
         for (String key : recipes.keySet()) {
             System.out.println("Recipe: " + key);

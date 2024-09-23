@@ -1,18 +1,15 @@
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import randomrecipes.Recipes;
+import tabs.AddView;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class Main extends Application {
     Recipes recipes = new Recipes();
@@ -27,11 +24,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         BorderPane layout = new BorderPane();
-        StackPane addPane = new StackPane();
-        HBox addPaneHBox = new HBox();
 
-        TextField textField = new TextField("Enter your recipe name here.");
-        textField.setMaxWidth(150);
+        AddView addView = new AddView();
+        StackPane addPane = addView.getView();
 
         Label label = new Label("hi");
 
@@ -39,40 +34,35 @@ public class Main extends Application {
         hBox.setPadding(new Insets(5, 5, 5, 5));
         hBox.setSpacing(5);
 
-        Button addView = new Button("add a recipe");
-        Button addRecipe = new Button("add");
+        Button addViewButton = new Button("add a recipe");
         Button getButton = new Button("get a random recipe");
         Button allButton = new Button("see all recipes");
 
-        hBox.getChildren().addAll(addView, getButton, allButton);
+        hBox.getChildren().addAll(addViewButton, getButton, allButton);
         layout.setTop(hBox);
 
-        addPane.setAlignment(Pos.CENTER);
-        addPaneHBox.setSpacing(5);
-        addPaneHBox.setAlignment(Pos.CENTER);
-        addPaneHBox.getChildren().addAll(textField, addRecipe);
-        addPane.getChildren().add(addPaneHBox);
 
         Scene scene = new Scene(layout,800,400);
 
-        addView.setOnAction(event -> layout.setCenter(addPane));
+        addViewButton.setOnAction(event -> layout.setCenter(addPane));
+
         getButton.setOnAction(event -> {
             recipes.printAll();
         });
 
-        addRecipe.setOnAction(event -> {
+        addView.getAddRecipe().setOnAction(event -> {
             if (addRecipeCount == 0) {
-                recipeName = textField.getText(); // Tofu
-                textField.setText("Now, add your ingredients.");
+                recipeName = addView.getTextField().getText(); // Tofu
+                addView.getTextField().clear();
+                addView.setAddPaneLabel("Now, add your ingredients ");
                 addRecipeCount++;
             } else {
-                String[] ingredients = textField.getText().split(" ");
+                String[] ingredients = addView.getTextField().getText().split(" ");
 
                 ArrayList<String> ingredientsList = new ArrayList<>(Arrays.asList(ingredients));
 
-                recipes.getRecipes().put(recipeName, ingredientsList);
-
-                textField.setText("Enter your recipe name here.");
+                recipes.addRecipes(recipeName, ingredientsList);
+                addView.setAddPaneLabel("Enter your recipe name ");
                 addRecipeCount = 0;
             }
         });
