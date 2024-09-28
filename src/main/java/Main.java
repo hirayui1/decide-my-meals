@@ -6,6 +6,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import randomrecipes.RecipesRepository;
 import tabs.AddView;
+import tabs.GetRandomRecipeView;
 
 public class Main extends Application {
     private RecipesRepository recipesRepository = new RecipesRepository();
@@ -16,11 +17,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         BorderPane layout = new BorderPane();
 
         AddView addView = new AddView(recipesRepository);
-        HBox hBox = createControlBox(addView,layout);
+        GetRandomRecipeView getRandomRecipeView = new GetRandomRecipeView(recipesRepository);
+
+        HBox hBox = createControlBox(addView,getRandomRecipeView,layout);
 
         layout.setTop(hBox);
 
@@ -29,7 +31,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private HBox createControlBox(AddView addView, BorderPane layout) {
+    private HBox createControlBox(AddView addView, GetRandomRecipeView getRandomRecipeView, BorderPane layout) {
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(5, 5, 5, 5));
         hBox.setSpacing(10);
@@ -39,7 +41,7 @@ public class Main extends Application {
         Button allRecipesButton = new Button("See All Recipes");
 
         addViewButton.setOnAction(event -> layout.setCenter(addView.getView()));
-        randomRecipeButton.setOnAction(event -> {recipesRepository.printAll();});
+        randomRecipeButton.setOnAction(event -> layout.setCenter(getRandomRecipeView.getView()));
         allRecipesButton.setOnAction(event -> {});
 
         hBox.getChildren().addAll(addViewButton, randomRecipeButton, allRecipesButton);

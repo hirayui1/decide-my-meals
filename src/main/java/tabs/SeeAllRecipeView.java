@@ -1,4 +1,4 @@
 package tabs;
 
-public class SeeAllRecipe {
+public class SeeAllRecipeView {
 }
