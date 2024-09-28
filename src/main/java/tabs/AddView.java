@@ -6,55 +6,70 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import randomrecipes.RecipesRepository;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class AddView {
 
-    private Label addPaneLabel;
+    private RecipesRepository recipesRepository;
+    private boolean addingRecipe;
+    private String recipeName;
+    private Label label;
     private TextField textField;
     private Button addRecipe;
 
+    public AddView(RecipesRepository recipesRepository){
+        this.recipesRepository = recipesRepository;
+        this.addingRecipe = false;
+    }
     public StackPane getView(){
 
-        StackPane addPane = new StackPane();
-        addPane.setAlignment(Pos.CENTER);
+        StackPane layout = new StackPane();
+        layout.setAlignment(Pos.CENTER);
 
-        addPaneLabel = new Label("Enter your recipe name ");
+        label = new Label("Enter your recipe name ");
         textField = new TextField();
         addRecipe = new Button("add");
 
         textField.setMaxWidth(150);
 
-        HBox addPaneHBox = new HBox();
-        addPaneHBox.setSpacing(5);
-        addPaneHBox.setAlignment(Pos.CENTER);
-        addPaneHBox.getChildren().addAll(addPaneLabel,textField, addRecipe);
+        HBox addPaneHBox = getHbox();
 
-        addPane.getChildren().add(addPaneHBox);
+        layout.getChildren().add(addPaneHBox);
 
-        return addPane;
+        addRecipe.setOnAction(event -> handleAddRecipe());
+
+        return layout;
     }
 
-    public Label getAddPaneLabel() {
-        return addPaneLabel;
+    public HBox getHbox(){
+        HBox hBox = new HBox();
+        hBox.setSpacing(5);
+        hBox.setAlignment(Pos.CENTER);
+        hBox.getChildren().addAll(label,textField, addRecipe);
+        return hBox;
     }
 
-    public void setAddPaneLabel(String text) {
-        this.addPaneLabel.setText(text);
+    public void handleAddRecipe(){
+        if (!addingRecipe) {
+            recipeName = textField.getText(); // Tofu
+            textField.clear();
+            label.setText("Now, add your ingredients ");
+            addingRecipe = true;
+        } else {
+            String[] ingredients = textField.getText().split(" ");
+            ArrayList<String> ingredientsList = new ArrayList<>(Arrays.asList(ingredients));
+            recipesRepository.addRecipes(recipeName, ingredientsList);
+            label.setText("Enter your recipe name ");
+            resetForm();
+        }
     }
 
-    public TextField getTextField() {
-        return textField;
-    }
-
-    public void setTextField(TextField textField) {
-        this.textField = textField;
-    }
-
-    public Button getAddRecipe() {
-        return addRecipe;
-    }
-
-    public void setAddRecipe(Button addRecipe) {
-        this.addRecipe = addRecipe;
+    private void resetForm() {
+        label.setText("Enter your recipe name:");
+        textField.clear();
+        addingRecipe = false;
     }
 }

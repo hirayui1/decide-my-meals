@@ -1,13 +1,12 @@
 package randomrecipes;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Recipes {
+public class RecipesRepository {
     private HashMap<String, List<String>> recipes;
 
-    public Recipes() {
+    public RecipesRepository() {
         recipes = new HashMap<>();
     }
 
